@@ -1,27 +1,72 @@
 import React from 'react';
 
-// TODO: Destructure the props you need here (header, image, etc.)
 class ChildComponent extends React.Component {
 
   constructor(props) {
-   // todo add bindings etc to inititalize component and funcs 
-   super(props);
+    super(props);
+
+    // Bind the event handler so 'this' refers to the component inside the method
+    this.handleClick = this.handleClick.bind(this);
   }
-  
-  render(){
-   return (
-    <div className="child-card">
-      {/* TODO: 
-        1. Add an <h2> for the header text 
-        2. Add an <img> tag for the image
-        3. Add a <p> tag for the content
-        4. Add a <button> that fires the click event
-      */}
-      
-      <button>Click Me</button>
-    </div>
-  );
- }
+
+  // Calls the parent's onAction method, passing up this pet's id
+  handleClick() {
+    this.props.onAction(this.props.id);
+  }
+
+  render() {
+    // Destructure all needed props from this.props for cleaner JSX below
+    const { name, image, status } = this.props;
+
+    const isHappy = status === 'happy';
+
+    return (
+      <div
+        className="child-card"
+        style={{
+          border: '2px solid #ccc',
+          borderRadius: '12px',
+          padding: '20px',
+          width: '200px',
+          textAlign: 'center',
+          backgroundColor: isHappy ? '#e6ffe6' : '#fff0f0',
+          transition: 'background-color 0.3s ease'
+        }}
+      >
+        {/* 1. Pet name as the card header */}
+        <h2 style={{ marginBottom: '10px' }}>{name}</h2>
+
+        {/* 2. Pet image — switches between happy and sad based on status */}
+        <img
+          src={image}
+          alt={`${name} is ${status}`}
+          style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '8px' }}
+        />
+
+        {/* 3. Current status displayed below the image */}
+        <p style={{ margin: '10px 0', fontWeight: 'bold', color: isHappy ? 'green' : 'red' }}>
+          {isHappy ? '😊 Happy' : '😢 Sad'}
+        </p>
+
+        {/* 4. Button fires handleClick, which calls the parent's onAction method */}
+        <button
+          onClick={this.handleClick}
+          style={{
+            marginTop: '8px',
+            padding: '8px 16px',
+            borderRadius: '8px',
+            border: 'none',
+            cursor: 'pointer',
+            backgroundColor: isHappy ? '#4caf50' : '#f44336',
+            color: 'white',
+            fontWeight: 'bold'
+          }}
+        >
+          {isHappy ? '🎾 Play Again' : '🍖 Feed Pet'}
+        </button>
+      </div>
+    );
+  }
 }
 
 export default ChildComponent;
